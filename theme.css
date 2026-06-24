@@ -155,7 +155,21 @@ tbody tr:nth-child(even) { background: var(--row); }
 tbody tr:last-child td { border-bottom: none; }
 td.team-col { text-align: left; padding-left: 16px; font-weight: 600; }
 .team-cell { display: flex; align-items: center; gap: 9px; }
-.team-cell .flag { font-size: 18px; line-height: 1; width: 22px; text-align: center; }
+/* Flag images (flagcdn). Base style shared by both pages; widths set per context.                                                                                                              
+   .flag-fallback is the emoji span shown if an image fails to load. */                                                                                                                         
+img.flag {                                                                                                                                                                                      
+  display: inline-block;                                                                                                                                                                        
+  height: auto;                                                                                                                                                                                 
+  object-fit: cover;                                                                                                                                                                            
+  border-radius: 2px;                                                                                                                                                                           
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);                                                                                                                                              
+  vertical-align: middle;                                                                                                                                                                       
+  flex: 0 0 auto;                                                                                                                                                                               
+  background: rgba(255, 255, 255, 0.04);                                                                                                                                                        
+}                                                                                                                                                                                               
+.flag-fallback { font-size: 18px; line-height: 1; text-align: center; flex: 0 0 auto; }                                                                                                         
+.team-cell img.flag { width: 24px; }                                                                                                                                                            
+.team-cell .flag-fallback { width: 24px; }   
 .pos { color: var(--muted); font-variant-numeric: tabular-nums; width: 16px; display: inline-block; }
 .pts { font-weight: 800; color: var(--gold-bright); font-variant-numeric: tabular-nums; }
 td, th { font-variant-numeric: tabular-nums; }

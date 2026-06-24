@@ -47,7 +47,8 @@
 .erow.pos2 .posn { background: var(--cyan); }
 .erow.pos3 .posn { background: var(--gold); }
 .erow.pos4 .posn { background: #5b6577; color: var(--text); }
-.erow .flag { font-size: 18px; width: 22px; text-align: center; }
+.erow img.flag { width: 24px; }                                                                                                                                                                  
+.erow .flag-fallback { font-size: 18px; width: 24px; text-align: center; }
 .erow .nm { font-weight: 600; font-size: 13.5px; flex: 1; }
 .erow .pts-mini { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
@@ -88,9 +89,11 @@
 .slot:last-child { border-bottom: none; }
 .slot:hover { background: rgba(255,255,255,0.04); }
 .slot input { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; flex: 0 0 auto; }
-.slot .flag { font-size: 16px; width: 20px; text-align: center; flex: 0 0 auto; }
+.slot img.flag { width: 22px; }                                                                                                                                                                  
+.slot .flag-fallback { font-size: 16px; width: 22px; text-align: center; }
 .slot .nm { font-size: 13px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .slot.empty { cursor: default; opacity: 0.6; }
+.slot.empty .flag { width: 22px; text-align: center; flex: 0 0 auto; color: var(--muted); }
 .slot.empty .nm { color: var(--muted); font-weight: 500; font-style: italic; }
 .slot.empty input { visibility: hidden; }
 .slot.winner { background: rgba(46, 230, 214, 0.12); }
@@ -106,7 +109,8 @@
 }
 .champion .lab { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 800; }
 .champion .who { font-size: 22px; font-weight: 800; margin-top: 8px; }
-.champion .who .flag { font-size: 26px; }
+.champion .who img.flag { width: 34px; }                                                                                                                                                        
+.champion .who .flag-fallback { font-size: 26px; }                                                                                                                                              
 .champion .who.tbd { color: var(--muted); font-size: 15px; font-weight: 600; }
 
 .thirdplace-mini { margin-top: 14px; }

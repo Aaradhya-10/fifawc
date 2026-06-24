@@ -30,9 +30,42 @@
     ENG: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", CRO: "🇭🇷", PAN: "🇵🇦", GHA: "🇬🇭",
   };
 
-  const int = (x) => Math.round(Number(x) || 0);
-  const flagFor = (abbr) => FLAGS[abbr] || "🏳️";
+// ESPN abbreviation -> ISO 3166-1 alpha-2 code (lowercase) for flagcdn.com.
+// England & Scotland use flagcdn's subdivision codes. These render as real
+// flag images on every OS (incl. Windows), unlike the emoji above.
+// All 48 verified against flagcdn (w40) before shipping.
+const ISO = {
+  MEX: "mx", CZE: "cz", KOR: "kr", RSA: "za",
+  CAN: "ca", BIH: "ba", SUI: "ch", QAT: "qa",
+  BRA: "br", SCO: "gb-sct", HAI: "ht", MAR: "ma",
+  PAR: "py", TUR: "tr", AUS: "au", USA: "us",
+  ECU: "ec", GER: "de", CIV: "ci", CUW: "cw",
+  NED: "nl", SWE: "se", JPN: "jp", TUN: "tn",
+  BEL: "be", IRN: "ir", EGY: "eg", NZL: "nz",
+  ESP: "es", URU: "uy", KSA: "sa", CPV: "cv",
+  NOR: "no", FRA: "fr", SEN: "sn", IRQ: "iq",
+  ARG: "ar", AUT: "at", ALG: "dz", JOR: "jo",
+  COL: "co", POR: "pt", UZB: "uz", COD: "cd",
+  ENG: "gb-eng", CRO: "hr", PAN: "pa", GHA: "gh",
+};
+                                                                                                                                                                                            
+const int = (x) => Math.round(Number(x) || 0);
+const flagFor = (abbr) => FLAGS[abbr] || "🏳️ "; // emoji (fallback / alt)
 
+// Flag as an <img> from flagcdn.com. Generated from the abbreviation at
+// <img> loads are not subject to CORS, so this works on any host incl.
+// GitHub Pages. Falls back to the emoji char if the image fails to load.
+function flagImg(abbr) {
+  const iso = ISO[abbr];
+  if (!iso) return '<span class="flag flag-fallback">' + flagFor(abbr) + "</span>";
+  const emoji = flagFor(abbr);
+  return (
+    '<img class="flag" src="https://flagcdn.com/w40/' + iso + '.png" ' +
+    'srcset="https://flagcdn.com/w80/' + iso + '.png 2x" ' +
+    'alt="' + abbr + '" loading="lazy" decoding="async" ' +
+    "onerror=\"this.outerHTML='<span class=\\'flag flag-fallback\\'>" + emoji + "</span>'\">"
+  );
+}
   // Build a stat-name -> value lookup from ESPN's stats array.
   function statsMap(entry) {
     const m = {};
@@ -129,7 +162,9 @@
   window.WC = {
     ENDPOINT,
     FLAGS,
+    ISO,
     flagFor,
+    flagImg,
     fetchStandings,
     parseStandings,
     rankThirdPlace,
