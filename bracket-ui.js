@@ -185,7 +185,7 @@
     div.className = "slot" + (isWinner ? " winner" : "");
     div.innerHTML = `
       <input type="radio" name="m${match.id}" ${isWinner ? "checked" : ""} />
-      ${WC.flagImg(t.abbr)}
+      ${WC.flagImg(team.abbr)}
       <span class="nm">${team.name}</span>`;
     div.addEventListener("click", () => pickWinner(match.id, team.abbr));
     return div;
@@ -205,7 +205,7 @@
     c.className = "champion";
     const w = finalMatch && finalMatch.winner;
     c.innerHTML = w
-      ? `<div class="lab">🏆 Champion</div><div class="who">${WC.flagImg(t.abbr)} ${w.name}</div>`
+      ? `<div class="lab">🏆 Champion</div><div class="who">${WC.flagImg(w.abbr)} ${w.name}</div>`
       : `<div class="lab">🏆 Champion</div><div class="who tbd">Pick the final to crown a winner</div>`;
     return c;
   }
