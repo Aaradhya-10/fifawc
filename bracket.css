@@ -1,0 +1,119 @@
+/* ============================================================
+   bracket.css — styles specific to the predictor page
+   (loaded after theme.css)
+   ============================================================ */
+
+.help { color: var(--muted); font-size: 13px; line-height: 1.55; margin: 0 0 18px; max-width: 900px; }
+.help b { color: var(--text); }
+
+/* counter pill for thirds selection */
+.counter {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+}
+.counter.ready { color: var(--ink); background: var(--cyan); border-color: transparent; }
+.counter.over { color: #fff; background: #c0392b; border-color: transparent; }
+
+/* ---------- editable group cards ---------- */
+.edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.egroup {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: var(--shadow); backdrop-filter: blur(9px); overflow: hidden;
+}
+.egroup h3 {
+  margin: 0; padding: 11px 14px; font-size: 14px; font-weight: 800; letter-spacing: 1px;
+  background: rgba(233, 196, 106, 0.06); border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.egroup h3 .hint { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; color: var(--muted); text-transform: none; }
+.rows { list-style: none; margin: 0; padding: 6px; }
+
+.erow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 8px; border-radius: 9px; background: var(--row);
+  margin-bottom: 5px; cursor: grab; user-select: none;
+  border: 1px solid transparent; transition: border-color 0.15s, background 0.15s;
+}
+.erow:last-child { margin-bottom: 0; }
+.erow:hover { border-color: var(--line); }
+.erow:active { cursor: grabbing; }
+.erow .grip { color: var(--muted); font-size: 14px; line-height: 1; cursor: grab; opacity: 0.6; }
+.erow .posn {
+  width: 20px; height: 20px; flex: 0 0 20px; border-radius: 6px;
+  display: grid; place-items: center; font-size: 11px; font-weight: 800; color: var(--ink);
+}
+.erow.pos1 .posn { background: var(--green); }
+.erow.pos2 .posn { background: var(--cyan); }
+.erow.pos3 .posn { background: var(--gold); }
+.erow.pos4 .posn { background: #5b6577; color: var(--text); }
+.erow .flag { font-size: 18px; width: 22px; text-align: center; }
+.erow .nm { font-weight: 600; font-size: 13.5px; flex: 1; }
+.erow .pts-mini { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* third-place qualify checkbox */
+.erow .qual { display: flex; align-items: center; gap: 6px; }
+.erow .qual label { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; }
+.erow .qual input { width: 17px; height: 17px; accent-color: var(--cyan); cursor: pointer; }
+.erow .qual input:disabled { cursor: not-allowed; opacity: 0.4; }
+.erow.qualified { background: var(--qualified); border-color: var(--qualified-line); }
+
+/* sortable drag states */
+.sortable-ghost { opacity: 0.35; }
+.sortable-chosen { border-color: var(--gold) !important; }
+.sortable-drag { box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
+/* ---------- bracket ---------- */
+.bracket-wrap { overflow-x: auto; padding: 8px 2px 24px; }
+.bracket { display: flex; gap: 26px; min-width: max-content; align-items: stretch; }
+.round-col { display: flex; flex-direction: column; justify-content: space-around; gap: 12px; min-width: 210px; }
+.round-col > .rhead {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold);
+  font-weight: 800; text-align: center; padding-bottom: 6px; margin-bottom: 2px;
+  border-bottom: 1px solid var(--line); position: sticky; top: 0;
+}
+
+.tie {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 11px;
+  overflow: hidden; backdrop-filter: blur(6px); position: relative;
+}
+.tie .tnum {
+  position: absolute; top: 4px; right: 7px; font-size: 9px; color: var(--muted);
+  letter-spacing: 0.5px; opacity: 0.7; font-weight: 700;
+}
+.slot {
+  display: flex; align-items: center; gap: 9px; padding: 9px 11px; cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.13s;
+}
+.slot:last-child { border-bottom: none; }
+.slot:hover { background: rgba(255,255,255,0.04); }
+.slot input { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; flex: 0 0 auto; }
+.slot .flag { font-size: 16px; width: 20px; text-align: center; flex: 0 0 auto; }
+.slot .nm { font-size: 13px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slot.empty { cursor: default; opacity: 0.6; }
+.slot.empty .nm { color: var(--muted); font-weight: 500; font-style: italic; }
+.slot.empty input { visibility: hidden; }
+.slot.winner { background: rgba(46, 230, 214, 0.12); }
+.slot.winner .nm { color: var(--gold-bright); font-weight: 800; }
+.tie.decided { border-color: rgba(46, 230, 214, 0.4); }
+
+/* final + champion */
+.final-col { justify-content: center; }
+.champion {
+  margin-top: 16px; text-align: center; background: var(--panel);
+  border: 1px solid var(--gold); border-radius: 14px; padding: 18px 16px;
+  box-shadow: 0 0 40px rgba(233,196,106,0.15);
+}
+.champion .lab { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+.champion .who { font-size: 22px; font-weight: 800; margin-top: 8px; }
+.champion .who .flag { font-size: 26px; }
+.champion .who.tbd { color: var(--muted); font-size: 15px; font-weight: 600; }
+
+.thirdplace-mini { margin-top: 14px; }
+.thirdplace-mini .rhead { color: var(--muted); }
+
+.warn {
+  background: rgba(192,57,43,0.14); border: 1px solid rgba(192,57,43,0.5); color: #ffb4ab;
+  padding: 11px 15px; border-radius: 10px; font-size: 13px; margin: 0 0 18px; font-weight: 600;
+}
+.warn.hidden { display: none; }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA World Cup 26 — Group Standings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="theme.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <div class="brand">
+        <h1>FIFA World Cup 26</h1>
+        <span class="sub">Group Standings</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html" class="active">Standings</a>
+        <a href="bracket.html">Bracket Predictor</a>
+      </nav>
+    </header>
+
+    <div class="statusbar">
+      <div class="toolbar">
+        <button id="refreshBtn" class="btn primary">
+          <span id="refreshIcon">⟳</span> Refresh standings
+        </button>
+      </div>
+      <div class="status" id="status">Loading…</div>
+    </div>
+
+    <h2 class="section-title">Groups</h2>
+    <div class="group-grid" id="groups"></div>
+
+    <div class="legend">
+      <span><i class="dot g"></i> 1st — advances to Round of 32</span>
+      <span><i class="dot c"></i> 2nd — advances to Round of 32</span>
+      <span><i class="dot y"></i> 3rd — best 8 advance (see table below)</span>
+    </div>
+
+    <h2 class="section-title">Third-Placed Teams — Race for the Best 8</h2>
+    <div class="master" id="thirdPlace"></div>
+    <p class="note">
+      The 12 group runners-up at third place are ranked by <strong>points</strong>, then
+      <strong>goal difference</strong>, then <strong>goals scored</strong>. The top
+      <strong>8</strong> (highlighted) advance to the Round of 32; the bottom 4 are eliminated.
+      Standings update only when matches finish — hit refresh after a match.
+    </p>
+
+    <p class="foot">Data: ESPN public feed · Flags via Unicode emoji · Unofficial fan project</p>
+  </div>
+
+  <script src="wc-data.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const $ = (id) => document.getElementById(id);
+      const statusEl = $("status");
+      const btn = $("refreshBtn");
+      const icon = $("refreshIcon");
+
+      function setStatus(html) { statusEl.innerHTML = html; }
+      function fmtTime(iso) {
+        try { return new Date(iso).toLocaleString(undefined,
+          { dateStyle: "medium", timeStyle: "short" }); } catch (_) { return iso; }
+      }
+
+      function groupCard(g) {
+        const rows = g.teams.map((t, i) => {
+          const pos = i + 1;
+          const cls = pos <= 3 ? `p${pos}` : "";
+          return `<tr class="${cls}">
+            <td class="team-col">
+              <div class="team-cell">
+                <span class="pos">${pos}</span>
+                <span class="flag">${t.flag}</span>
+                <span>${t.name}</span>
+              </div>
+            </td>
+            <td>${t.pld}</td>
+            <td>${t.w}</td>
+            <td>${t.d}</td>
+            <td>${t.l}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td>${t.gd > 0 ? "+" + t.gd : t.gd}</td>
+            <td class="pts">${t.pts}</td>
+          </tr>`;
+        }).join("");
+
+        return `<div class="card">
+          <div class="card-head">
+            <h3>${g.name}</h3>
+            <span class="tag">${g.teams[0] ? g.teams[0].pld : 0} / 3 played</span>
+          </div>
+          <table>
+            <thead><tr>
+              <th class="team-col">Team</th>
+              <th>P</th><th>W</th><th>D</th><th>L</th>
+              <th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+      }
+
+      function thirdPlaceTable(groups) {
+        const thirds = WC.rankThirdPlace(groups);
+        const rows = thirds.map((t, i) => {
+          const rank = i + 1;
+          const q = rank <= 8;
+          const cls = (q ? "qualified " : "") + (rank === 8 ? "cutrow" : "");
+          return `<tr class="${cls.trim()}">
+            <td class="rankno">${rank}</td>
+            <td class="team-col">
+              <div class="team-cell">
+                <span class="flag">${t.flag}</span>
+                <span>${t.name}</span>
+              </div>
+            </td>
+            <td>${t.group}</td>
+            <td>${t.pld}</td>
+            <td>${t.gf}</td>
+            <td>${t.ga}</td>
+            <td>${t.gd > 0 ? "+" + t.gd : t.gd}</td>
+            <td class="pts">${t.pts}</td>
+            <td>${q ? '<span class="qbadge">Qualifies</span>' : "—"}</td>
+          </tr>`;
+        }).join("");
+
+        return `<table>
+          <thead><tr>
+            <th>#</th>
+            <th class="team-col">Team</th>
+            <th>Grp</th><th>P</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>R32</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+      }
+
+      function render(groups) {
+        $("groups").innerHTML = groups.map(groupCard).join("");
+        $("thirdPlace").innerHTML = thirdPlaceTable(groups);
+      }
+
+      async function refresh() {
+        btn.disabled = true;
+        icon.className = "spin";
+        setStatus("Syncing latest results…");
+        try {
+          const raw = await WC.fetchStandings();
+          const groups = WC.parseStandings(raw);
+          WC.saveCache(groups);
+          render(groups);
+          setStatus(`<span class="ok">●</span> Live · updated ${fmtTime(new Date().toISOString())}`);
+        } catch (err) {
+          const cached = WC.loadCache();
+          if (cached) {
+            render(cached.groups);
+            setStatus(`<span class="err">●</span> Couldn't reach ESPN (${err.message}). Showing cached data from ${fmtTime(cached.ts)}.`);
+          } else {
+            setStatus(`<span class="err">●</span> Failed to load: ${err.message}. Check your connection and retry.`);
+          }
+        } finally {
+          btn.disabled = false;
+          icon.className = "";
+        }
+      }
+
+      btn.addEventListener("click", refresh);
+
+      // Initial paint: show cache instantly if present, then refresh live.
+      const cached = WC.loadCache();
+      if (cached) {
+        render(cached.groups);
+        setStatus(`Showing cached data from ${fmtTime(cached.ts)} — refreshing…`);
+      }
+      refresh();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA World Cup 26 — Bracket Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="bracket.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <div class="brand">
+        <h1>FIFA World Cup 26</h1>
+        <span class="sub">Bracket Predictor</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html">Standings</a>
+        <a href="bracket.html" class="active">Bracket Predictor</a>
+      </nav>
+    </header>
+
+    <div class="statusbar">
+      <div class="toolbar">
+        <button id="syncBtn" class="btn primary"><span id="syncIcon">⟳</span> Load live standings</button>
+        <button id="resetBtn" class="btn">↺ Reset predictions</button>
+        <span class="counter" id="counter">3rd-place: 0 / 8</span>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <p class="help">
+      <b>Step 1 — Set your groups.</b> Drag teams to reorder each group (1st → 4th). Tick the
+      <b>Qualify</b> box on exactly <b>8</b> of the 12 third-placed teams to choose which advance.
+      <b>Step 2 — Pick winners.</b> The Round of 32 auto-fills from your groups; click a team (radio)
+      in any tie to advance it. Winners flow through to the Final. Everything saves automatically.
+    </p>
+
+    <div class="warn hidden" id="warn"></div>
+
+    <h2 class="section-title">Step 1 · Your Group Standings</h2>
+    <div class="edit-grid" id="editGroups"></div>
+
+    <h2 class="section-title">Step 2 · Knockout Bracket</h2>
+    <div class="bracket-wrap">
+      <div class="bracket" id="bracket"></div>
+    </div>
+
+    <p class="foot">Predictions stored locally in your browser · Unofficial fan project</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.6/Sortable.min.js"></script>
+  <script src="wc-data.js"></script>
+  <script src="wc-thirds-official.js"></script>
+  <script src="wc-bracket.js"></script>
+  <script src="bracket-ui.js"></script>
+</body>
+</html>
